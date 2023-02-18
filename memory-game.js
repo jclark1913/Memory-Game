@@ -1,6 +1,6 @@
 // Generate cards for game board
 
-let cardsContainer = document.querySelector(".cards-container");
+let gameBoard = document.querySelector(".cards-container");
 
 // Possible pairs
 let cards = [
@@ -42,7 +42,7 @@ let cards = [
   ],
   [
     { name: 'horse', content: '<h2>خيل (خيول)</h2>' },
-    { name: 'horse', image: './images/horse.jpg'}
+    { name: 'horse', image: './images/horse.jpg' }
   ]
 ];
 
@@ -50,7 +50,7 @@ let cards = [
 
 function selectPairs(pairArray) {
   let resultArray = [];
-  for (let i = 0; i < 10; i++){
+  for (let i = 0; i < 10; i++) {
     for (let x = 0; x < pairArray[i].length; x++) {
       resultArray.push(pairArray[i][x]);
     }
@@ -80,25 +80,42 @@ const normalHeight = 725 + 'px';
 
 function initializeCardGrid(gridSizeRows, gridSizeCols) {
   for (let i = 0; i < gridSizeRows * gridSizeCols; i++) {
-    let memoryCard = document.createElement('div');
-    memoryCard.classList.add('memory-card');
-    cardsContainer.appendChild(memoryCard);
-    cardsContainer.style.maxWidth = normalWidth;
-    cardsContainer.style.maxHeight = normalHeight;
+    let memoryCardContainer = document.createElement('div');
+    let cardWrapper = document.createElement('div');
+    let cardFront = document.createElement('div');
+    let cardBack = document.createElement('div');
+    memoryCardContainer.classList.add('memory-card-container');
+    cardWrapper.classList.add('card-wrapper');
+    cardBack.classList.add('card-back');
+    cardFront.classList.add('card-front')
+    cardWrapper.appendChild(cardFront);
+    cardWrapper.appendChild(cardBack);
+    memoryCardContainer.appendChild(cardWrapper);
+    gameBoard.appendChild(memoryCardContainer);
     if (i < currentDeckShuffled.length) {
       if (currentDeckShuffled[i].content) {
-        memoryCard.innerHTML = currentDeckShuffled[i].content;
+        cardBack.innerHTML = currentDeckShuffled[i].content;
       } else {
         let image = document.createElement("img");
         image.src = currentDeckShuffled[i].image;
         image.classList.add('image-card');
-        memoryCard.appendChild(image);
+        cardBack.appendChild(image);
       }
     }
   }
 }
 
+// Initialize Game
+
 initializeCardGrid(4, 5);
+let allCards = document.querySelectorAll('.memory-card-container');
+
+allCards.forEach(card => {
+  card.addEventListener('click', () => {
+    card.querySelector('.card-wrapper').classList.toggle('flipped');
+  })
+})
+
 
 // Game initialization
 

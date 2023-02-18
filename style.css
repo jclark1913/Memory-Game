@@ -74,10 +74,28 @@ body {
     margin: 0;
 }
 
-.memory-card {
+.memory-card-container {
+    position: relative;
+    perspective: 1000px;
+}
+
+.card-front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color:#30363d;
+}
+
+.card-back {
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    background-color: white;
+}
+
+.memory-card-container,
+.card-back {
     width: 150px;
     height: 150px;
-    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -86,7 +104,16 @@ body {
     color: black;
 }
 
-.memory-card>img {
+.card-wrapper {
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease;
+}
+
+.card-wrapper.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-back>img {
     object-fit: scale-down;
     overflow: hidden;
     width: 100%;
