@@ -109,6 +109,7 @@ function initializeCardGrid(gridSizeRows, gridSizeCols) {
 let firstCard, secondCard;
 let hasFlippedCard = false;
 let score = 0;
+let attempts = 0;
 let lockBoard = false;
 
 
@@ -142,6 +143,9 @@ function checkForMatch() {
   } else {
     resetCards();
   }
+  attempts++;
+  updateAttempts();
+  checkForWin();
 }
 
 // Disabling matched cards
@@ -152,6 +156,20 @@ function disableMatches() {
     secondCard.removeEventListener('click', flipCard);
     resetBoard();
   }, 1200);
+}
+
+// Winning game
+
+function checkForWin() {
+  if (score >= 10) {
+    playerWins();
+    updateBestGame();
+  }
+}
+
+function playerWins() {
+  createPlayAgainButton();
+  gameStarted = false;
 }
 
 // Reset Cards
@@ -172,11 +190,15 @@ function resetBoard() {
   hasFlippedCard = false;
 }
 
-// Scoring + timer
+// Scoring + attempts
 currentScore = document.querySelector('#current-score');
+currentAttempts = document.querySelector('#current-attempts');
+bestGame = document.querySelector('#best-game');
+let bestAttempts;
+
 
 function updateScore() {
-  currentScore.textContent = `Score: ${score}/10`
+  currentScore.textContent = `Score: ${score}/10`;
 }
 
 function resetScore() {
@@ -184,11 +206,30 @@ function resetScore() {
   updateScore();
 }
 
+function updateAttempts() {
+  currentAttempts.textContent = `Attempts: ${attempts}`;
+}
+
+function resetAttempts() {
+  attempts = 0;
+  updateAttempts();
+}
+
+function updateBestGame() {
+  if (!bestAttempts || attempts < bestAttempts) {
+    bestAttempts = attempts;
+    bestGame.textContent = `${bestAttempts} attempts`;
+  }
+}
+
 // Initialize Game
 
 let gameStarted = false;
 
 function startGame() {
+  reShuffleCards();
+  resetScore();
+  resetAttempts();
   if (!gameStarted) {
     placeholderText.style.display = 'none';
     gameStarted = true;
@@ -211,24 +252,40 @@ function createStartButton() {
   buttonTitle.textContent = 'Start Game';
   startButton.style.backgroundColor = '#40CE0B';
   startButton.removeEventListener('click', stopGame);
-  startButton.addEventListener('click', startGame)
+  startButton.addEventListener('click', startGame);
+}
+
+function createPlayAgainButton() {
+  buttonTitle.textContent = 'Play Again?';
+  startButton.style.backgroundColor = '#40CE0B';
+  startButton.removeEventListener('click', stopGame);
+  startButton.addEventListener('click', playAgain);
+}
+
+function playAgain() {
+  clearBoard();
+  startGame();
 }
 
 function stopGame() {
-  let allBoardElements = document.querySelectorAll('.memory-card-container');
-  for (let card of allBoardElements) {
-    card.parentNode.removeChild(card);
-  }
-  reShuffleCards();
+  clearBoard();
   createStartButton();
   resetScore();
-  placeholderText.style.display = ''
+  resetAttempts();
+  placeholderText.style.display = '';
   gameStarted = false;
 }
 
 function reShuffleCards() {
   currentDeck = selectPairs(cards);
   currentDeckShuffled = shuffle(currentDeck);
+}
+
+function clearBoard() {
+  let allBoardElements = document.querySelectorAll('.memory-card-container');
+  for (let card of allBoardElements) {
+    card.parentNode.removeChild(card);
+  }
 }
 
 // Placeholder text on start
