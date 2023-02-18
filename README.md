@@ -1,7 +1,7 @@
 1. Github links
 
-Repo:
-Deployment:
+Repo: https://github.com/jclark1913/Meme-Generator
+Deployment: https://jclark1913.github.io/Memory-Game/
 
 2. Background
 
