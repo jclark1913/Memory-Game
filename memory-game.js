@@ -70,9 +70,7 @@ function shuffle(items) {
   return items;
 }
 
-console.log(currentDeck);
 let currentDeckShuffled = shuffle(currentDeck);
-console.log(currentDeckShuffled);
 
 // -- Generate divs according to difficulty parameters
 const normalWidth = 900 + 'px';
@@ -140,6 +138,7 @@ function checkForMatch() {
   if (firstCard.dataset.animal === secondCard.dataset.animal) {
     score++;
     disableMatches();
+    updateScore();
   } else {
     resetCards();
   }
@@ -149,10 +148,11 @@ function checkForMatch() {
 
 function disableMatches() {
   setTimeout(() => {
-  firstCard.removeEventListener('click', flipCard);
-  secondCard.removeEventListener('click', flipCard);
-  lockBoard = false;
-}, 1200)}
+    firstCard.removeEventListener('click', flipCard);
+    secondCard.removeEventListener('click', flipCard);
+    resetBoard();
+  }, 1200);
+}
 
 // Reset Cards
 
@@ -161,26 +161,84 @@ function resetCards() {
   setTimeout(() => {
     firstCard.classList.remove('flipped');
     secondCard.classList.remove('flipped');
-    lockBoard = false;
+    resetBoard();
   }, 1200);
+}
+
+function resetBoard() {
+  firstCard = null;
+  secondCard = null;
+  lockBoard = false;
+  hasFlippedCard = false;
+}
+
+// Scoring + timer
+currentScore = document.querySelector('#current-score');
+
+function updateScore() {
+  currentScore.textContent = `Score: ${score}/10`
+}
+
+function resetScore() {
+  score = 0;
+  updateScore();
 }
 
 // Initialize Game
 
-initializeCardGrid(4, 5);
-let allCards = document.querySelectorAll('.card-wrapper');
+let gameStarted = false;
 
-allCards.forEach(card => card.addEventListener('click', flipCard));
+function startGame() {
+  if (!gameStarted) {
+    placeholderText.style.display = 'none';
+    gameStarted = true;
+    initializeCardGrid(4, 5);
+    let allCards = document.querySelectorAll('.card-wrapper');
+    allCards.forEach(card => card.addEventListener('click', flipCard));
+    createStopButton();
+    return;
+  }
+}
 
+function createStopButton() {
+  buttonTitle.textContent = 'Stop Game';
+  startButton.style.backgroundColor = '#FC4A24';
+  startButton.removeEventListener('click', startGame);
+  startButton.addEventListener('click', stopGame);
+}
 
-// Game initialization
+function createStartButton() {
+  buttonTitle.textContent = 'Start Game';
+  startButton.style.backgroundColor = '#40CE0B';
+  startButton.removeEventListener('click', stopGame);
+  startButton.addEventListener('click', startGame)
+}
+
+function stopGame() {
+  let allBoardElements = document.querySelectorAll('.memory-card-container');
+  for (let card of allBoardElements) {
+    card.parentNode.removeChild(card);
+  }
+  reShuffleCards();
+  createStartButton();
+  resetScore();
+  placeholderText.style.display = ''
+  gameStarted = false;
+}
+
+function reShuffleCards() {
+  currentDeck = selectPairs(cards);
+  currentDeckShuffled = shuffle(currentDeck);
+}
+
+// Placeholder text on start
+
+let placeholderText = document.querySelector('#placeholder-text');
 
 // -- Start button: this should populate each card with the pairs
-
-
-
-
-// Cards
+startButton = document.querySelector('.start-button');
+startButton.addEventListener('click', startGame);
+buttonTitle = document.querySelector('.button-title')
 
 
 

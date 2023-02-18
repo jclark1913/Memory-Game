@@ -16,20 +16,35 @@
 
     <div class="main">
       <div class="game-window">
-        <div class="cards-container">
+        <div class="cards-container"><h1 class="options-text" id="placeholder-text">Click 'Start Game' to begin!</h1>
         </div>
-        <div class="options-bar"></div>
+
+        <div class="options-bar">
+          <div class="left-options-container">
+            <h2 class="options-text" id="current-score">Score: 0/10</h2>
+          </div>
+          <div class="center-options-container">
+            <button class="start-button">
+              <h1 class="button-title">Start Game</h1>
+            </button>
+            <div class="timer">
+              <p class="options-text">Timer: 00:00</p>
+            </div>
+          </div>
+          <div class="right-options-container">
+            <h2 class="options-text">Fastest Time: 00:00 </h2>
+          </div>
+        </div>
       </div>
     </div>
 
+      <footer class="footer">
+        <p class="footer-text">Created by Justin Clark</p><a href="https://www.github.com/jclark1913"><img
+            src="./images/github-mark-white.svg" class="github-link"></a></p>
+      </footer>
 
-    <footer class="footer">
-      <p class="footer-text">Created by Justin Clark</p><a href="https://www.github.com/jclark1913"><img
-          src="./images/github-mark-white.svg" class="github-link"></a></p>
-    </footer>
-  </div>
 
-  <script src="memory-game.js"></script>
+    <script src="memory-game.js"></script>
 </body>
 
 </html>
