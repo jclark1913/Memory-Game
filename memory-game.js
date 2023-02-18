@@ -46,7 +46,7 @@ let cards = [
   ]
 ];
 
-// Select 10 pairs and shuffle them
+// Select 10 pairs and shuffle them (NOTE: As it stands there is an unnecessary step. However, if there were more than 10 pairs the current code should draw 10 randomly from the cards array regardless of its length.)
 
 function selectPairs(pairArray) {
   let resultArray = [];
@@ -72,9 +72,7 @@ function shuffle(items) {
 
 let currentDeckShuffled = shuffle(currentDeck);
 
-// -- Generate divs according to difficulty parameters
-const normalWidth = 900 + 'px';
-const normalHeight = 725 + 'px';
+// Generate divs according to difficulty parameters (NOTE: There are no difficulty parameters currently. In the future I may add that functionality, so I wrote the function to accomodate difficulty levels in the future. Kind of.)
 
 function initializeCardGrid(gridSizeRows, gridSizeCols) {
   for (let i = 0; i < gridSizeRows * gridSizeCols; i++) {
@@ -126,7 +124,6 @@ function flipCard() {
     hasFlippedCard = true;
     return;
   }
-
   secondCard = this;
   checkForMatch();
   hasFlippedCard = false;
@@ -198,7 +195,7 @@ let bestAttempts;
 
 
 function updateScore() {
-  currentScore.textContent = `Score: ${score}/10`;
+  currentScore.textContent = `Found: ${score}/10`;
 }
 
 function resetScore() {
@@ -222,8 +219,12 @@ function updateBestGame() {
   }
 }
 
-// Initialize Game
+// Starting game + buttons
 
+let placeholderText = document.querySelector('#placeholder-text');
+startButton = document.querySelector('.start-button');
+startButton.addEventListener('click', startGame);
+buttonTitle = document.querySelector('.button-title')
 let gameStarted = false;
 
 function startGame() {
@@ -276,6 +277,8 @@ function stopGame() {
   gameStarted = false;
 }
 
+// Reset functions
+
 function reShuffleCards() {
   currentDeck = selectPairs(cards);
   currentDeckShuffled = shuffle(currentDeck);
@@ -288,14 +291,6 @@ function clearBoard() {
   }
 }
 
-// Placeholder text on start
-
-let placeholderText = document.querySelector('#placeholder-text');
-
-// -- Start button: this should populate each card with the pairs
-startButton = document.querySelector('.start-button');
-startButton.addEventListener('click', startGame);
-buttonTitle = document.querySelector('.button-title')
 
 
 
