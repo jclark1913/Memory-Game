@@ -87,10 +87,11 @@ function initializeCardGrid(gridSizeRows, gridSizeCols) {
     memoryCardContainer.classList.add('memory-card-container');
     cardWrapper.classList.add('card-wrapper');
     cardBack.classList.add('card-back');
-    cardFront.classList.add('card-front')
+    cardFront.classList.add('card-front');
     cardWrapper.appendChild(cardFront);
     cardWrapper.appendChild(cardBack);
     memoryCardContainer.appendChild(cardWrapper);
+    cardWrapper.dataset.animal = currentDeckShuffled[i].name;
     gameBoard.appendChild(memoryCardContainer);
     if (i < currentDeckShuffled.length) {
       if (currentDeckShuffled[i].content) {
@@ -105,16 +106,71 @@ function initializeCardGrid(gridSizeRows, gridSizeCols) {
   }
 }
 
+// Flip and check functions
+
+let firstCard, secondCard;
+let hasFlippedCard = false;
+let score = 0;
+let lockBoard = false;
+
+
+function flipCard() {
+  if (lockBoard) {
+    return;
+  };
+  if (this === firstCard) {
+    return;
+  };
+  this.classList.add('flipped');
+  if (!hasFlippedCard) {
+    firstCard = this;
+    hasFlippedCard = true;
+    return;
+  }
+
+  secondCard = this;
+  checkForMatch();
+  hasFlippedCard = false;
+}
+
+// Checking for match
+
+function checkForMatch() {
+  lockBoard = true;
+  if (firstCard.dataset.animal === secondCard.dataset.animal) {
+    score++;
+    disableMatches();
+  } else {
+    resetCards();
+  }
+}
+
+// Disabling matched cards
+
+function disableMatches() {
+  setTimeout(() => {
+  firstCard.removeEventListener('click', flipCard);
+  secondCard.removeEventListener('click', flipCard);
+  lockBoard = false;
+}, 1200)}
+
+// Reset Cards
+
+function resetCards() {
+  lockBoard = true;
+  setTimeout(() => {
+    firstCard.classList.remove('flipped');
+    secondCard.classList.remove('flipped');
+    lockBoard = false;
+  }, 1200);
+}
+
 // Initialize Game
 
 initializeCardGrid(4, 5);
-let allCards = document.querySelectorAll('.memory-card-container');
+let allCards = document.querySelectorAll('.card-wrapper');
 
-allCards.forEach(card => {
-  card.addEventListener('click', () => {
-    card.querySelector('.card-wrapper').classList.toggle('flipped');
-  })
-})
+allCards.forEach(card => card.addEventListener('click', flipCard));
 
 
 // Game initialization
